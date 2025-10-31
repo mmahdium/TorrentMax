@@ -75,7 +75,7 @@ async function getMaxedMagnetFromTorrent(file: File) {
     <div class="grow flex items-start justify-center pt-40 px-4">
       <div class="w-full max-w-2xl" >
         <IndexHero />
-        <div v-if="!maxedMagnet" class="space-y-6">
+        <div v-if="!maxedMagnet && !loading" class="space-y-6">
           <SearchBar @submit="getMaxedMagnetUrl" />
           <div class="divider divider-neutral">OR</div>
           <TorrentUpload @submit="getMaxedMagnetFromTorrent" />
