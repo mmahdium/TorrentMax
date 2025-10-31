@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { Analytics } from "@vercel/analytics/nuxt";
 useSeoMeta({
   title: "TorrentMax – Enrich Your Magnet Links with Trackers Instantly",
   description:
@@ -17,5 +18,6 @@ useSeoMeta({
 });
 </script>
 <template>
+  <Analytics />
   <NuxtPage />
 </template>
