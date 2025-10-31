@@ -60,6 +60,7 @@ function handleSubmit() {
       <!-- Right circular button -->
       <button
         class="ml-3 w-10 h-10 flex items-center justify-center rounded-full bg-primary text-accent hover:scale-110 transition-transform duration-300 shadow-md"
+        aria-label="Submit magnet link"
         @click="handleSubmit"
       >
         <svg

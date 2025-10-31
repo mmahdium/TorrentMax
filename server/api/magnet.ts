@@ -23,7 +23,7 @@ export default defineEventHandler(async (event) => {
       id: maxedMagnet.xt.slice(9),
       maxedMagnet: getMagnetUrl(maxedMagnet),
     };
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
   } catch (error: any) {
     throw createError({
       statusCode: 400,
