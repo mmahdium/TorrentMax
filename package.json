@@ -13,11 +13,13 @@
     "@formkit/auto-animate": "^0.9.0",
     "@nuxt/eslint": "1.10.0",
     "@tailwindcss/vite": "^4.1.16",
+    "@types/parse-torrent": "^5.8.8",
     "@vercel/analytics": "^1.5.0",
     "@vueuse/motion": "^3.0.3",
     "daisyui": "^5.3.10",
     "eslint": "^9.38.0",
     "nuxt": "^4.2.0",
+    "parse-torrent": "^11.0.19",
     "tailwindcss": "^4.1.16",
     "vue": "^3.5.22",
     "vue-router": "^4.6.3"
