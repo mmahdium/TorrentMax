@@ -2,70 +2,45 @@
 import MagnetCard from "~/components/MagnetCard.vue";
 import { ref } from "vue";
 import IndexHero from "~/components/IndexHero.vue";
+import { getMaxedMagnetFromTorrent, getMaxedMagnetUrl } from "~/lib/api";
 
 interface MaxedMagnetResponse {
   totalTrackers: number;
   name?: string;
   id: string;
   maxedMagnet: string;
+  error?: string;
 }
 
 const maxedMagnet = ref<MaxedMagnetResponse | null>(null);
 const error = ref<string | null>(null);
 const loading = ref(false);
 
-async function getMaxedMagnetUrl(magnet: string) {
-  error.value = null; // Clear any previous error
-  loading.value = true; // Set loading to true
+async function handleMagnetSubmit(magnet: string) {
+  loading.value = true;
+  error.value = null;
+  maxedMagnet.value = null;
 
-  try {
-    const response = await fetch("/api/magnet", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ magnet }),
-    });
+  const result = await getMaxedMagnetUrl(magnet);
 
-    if (!response.ok) {
-      const errorData = await response.json().catch(() => ({}));
-      error.value =
-        errorData.message || `HTTP error! status: ${response.status}`;
-      console.error("API error:", error.value);
-      return;
-    }
+  loading.value = false;
 
-    maxedMagnet.value = await response.json();
-  } catch (err) {
-    error.value =
-      err instanceof Error ? err.message : "An unknown error occurred";
-    console.error("Network error:", err);
-  } finally {
-    loading.value = false; // Reset loading state
+  if (result.error) {
+    error.value = result.error;
+  } else {
+    maxedMagnet.value = result;
   }
 }
 
-async function getMaxedMagnetFromTorrent(file: File) {
-  error.value = null; // Clear any previous error
-  loading.value = true; // Set loading to true
+async function handleTorrentUpload(file: File) {
+  loading.value = true;
+  const result = await getMaxedMagnetFromTorrent(file);
+  loading.value = false;
 
-  try {
-    const form = new FormData();
-    form.append("file", file);
-
-    const res = await fetch("/api/torrent", {
-      method: "POST",
-      body: form,
-    });
-
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || `HTTP ${res.status}`);
-
-    maxedMagnet.value = data;
-  } catch (e: any) {
-    error.value = e.message || "Upload failed";
-  } finally {
-    loading.value = false;
+  if (result.error) {
+    error.value = result.error;
+  } else {
+    maxedMagnet.value = result;
   }
 }
 </script>
@@ -73,12 +48,12 @@ async function getMaxedMagnetFromTorrent(file: File) {
 <template>
   <div class="flex flex-col min-h-screen bg-base-300">
     <div class="grow flex items-start justify-center pt-40 px-4">
-      <div class="w-full max-w-2xl" >
+      <div class="w-full max-w-2xl">
         <IndexHero />
         <div v-if="!maxedMagnet && !loading" class="space-y-6">
-          <SearchBar @submit="getMaxedMagnetUrl" />
+          <SearchBar @submit="handleMagnetSubmit" />
           <div class="divider divider-neutral">OR</div>
-          <TorrentUpload @submit="getMaxedMagnetFromTorrent" />
+          <TorrentUpload @submit="handleTorrentUpload" />
         </div>
 
         <div
@@ -86,7 +61,7 @@ async function getMaxedMagnetFromTorrent(file: File) {
           v-motion-fade
           class="flex justify-center items-center p-8"
         >
-          <span class="loading loading-infinity loading-lg" />
+          <span class="loading loading-infinity loading-xl" />
         </div>
 
         <!-- Error message display -->
