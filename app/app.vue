@@ -19,5 +19,6 @@ useSeoMeta({
 </script>
 <template>
   <Analytics />
+
   <NuxtPage />
 </template>
